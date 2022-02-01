@@ -1,5 +1,15 @@
 version: "3.7"
 services:
+  varnish:
+    image: varnish:latest
+    ports:
+      - "6081:6081"
+      - "6085:6085"
+    environment:
+      - VARNISH_SIZE=2G
+    command: "-p default_keep=300"
+    depends_on:
+      - "web-server"      
   web-server:
     build:
       context: ./bin/php8/
@@ -78,14 +88,5 @@ services:
     image: redis:latest
     ports:
       - "6379:6379"
-  varnish:
-    image: varnish:latest
-    ports:
-      - "8080:80"
-    environment:
-      - VARNISH_SIZE=2G
-    command: "-p default_keep=300"
-    depends_on:
-      - "web-server"
 volumes:
   mysql-data:
